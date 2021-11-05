@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: myapp-mysql
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    networks:
+      - laravelapp
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - PMA_HOST=${PMA_HOST}
+      - PMA_PORT=${PMA_PORT}
+      - PMA_USER=${PMA_USER}
+      - PMA_PASSWORD=${PMA_PASSWORD}
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+    networks:
+      - laravelapp
+
+networks:
+  laravelapp:
+    driver: bridge
